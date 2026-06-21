@@ -1,0 +1,17 @@
+package GAME.Tiles;
+
+import GAME.Graphics.Assets;
+
+public class right_up_corner2 extends Tile{
+    public right_up_corner2(int id)
+    {
+        super(Assets.getRight_up_corner2(), id);
+    }
+
+    @Override
+    public boolean IsSolid()
+    {
+        return true;
+    }
+
+}
