@@ -21,6 +21,7 @@ public class Player extends Creature implements Damageable{
     private int k=37;
     private boolean winner = false;
     private boolean dead = false;
+    private boolean leaderboardSaved = false;
 
     public Player(Handler handler, float x, float y) {
         super(handler, x, y);
@@ -76,6 +77,7 @@ public class Player extends Creature implements Damageable{
 
         if(lives <= 0) {
             dead = true;
+            saveScoreToLeaderboard();
             Sound.getChompSound().stop();
             Sound.getDeathSound().play();
         }
@@ -202,6 +204,7 @@ public class Player extends Creature implements Damageable{
                 State.setState(gameState);
             } else {
                 winner = true;
+                saveScoreToLeaderboard();
                 getHandler().getGame().setLevel(1);
             }
             getHandler().getGameFileManager().saveGame(
@@ -222,6 +225,13 @@ public class Player extends Creature implements Damageable{
 
     public boolean isDead() {
         return dead;
+    }
+
+    private void saveScoreToLeaderboard() {
+        if (!leaderboardSaved) {
+            getHandler().getGameFileManager().saveLeaderboardScore(getHandler().getGame().getScore());
+            leaderboardSaved = true;
+        }
     }
 
 }

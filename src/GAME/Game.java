@@ -7,7 +7,6 @@ import GAME.Keys.Mouse;
 import GAME.States.GameState;
 import GAME.States.MenuState;
 import GAME.States.State;
-
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 
@@ -138,6 +137,10 @@ public class Game implements Runnable{
 
     public void setScore(int amount) {
         this.score = this.score + amount;
+    }
+
+    public void setScoreValue(int score) {
+        this.score = score;
     }
 
     public State getMenuState() {

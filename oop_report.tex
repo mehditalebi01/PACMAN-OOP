@@ -1,0 +1,629 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{setspace}
+
+\onehalfspacing
+
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codekw}{RGB}{0,79,142}
+\definecolor{codestr}{RGB}{128,64,0}
+\definecolor{codecomment}{RGB}{80,120,80}
+
+\lstdefinestyle{javastyle}{
+    language=Java,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{codekw}\bfseries,
+    stringstyle=\color{codestr},
+    commentstyle=\color{codecomment},
+    backgroundcolor=\color{codebg},
+    frame=single,
+    breaklines=true,
+    columns=fullflexible,
+    showstringspaces=false,
+    tabsize=4
+}
+
+\lstset{style=javastyle}
+
+\title{\textbf{Object-Oriented Programming Report}\\Pac-Man Game Project}
+\author{Mehdi Talebikhatir\\Matricola: 558948}
+\date{Professor: Salvatore Distefano\\Universita degli Studi di Messina}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{Abstract}
+
+This report describes the Object-Oriented Programming concepts used in a Java Pac-Man game project. The project is organized around reusable classes for the game loop, map, entities, tiles, states, input, graphics, sound, and file management. The implementation uses inheritance, encapsulation, abstraction, polymorphism, interfaces, composition, subtyping, exception handling, customization, and the Open/Closed Principle. Each concept is explained with code snippets taken from the project.
+
+\section{Project Introduction and Overview}
+
+The project is a desktop Pac-Man-style game written in Java. The player moves through a tile-based map, eats dots, avoids ghosts, changes levels, saves and loads game progress, and records leaderboard scores. The code is divided into packages for entities, moving creatures, tiles, states, graphics, and input keys.
+
+The main game class owns the main loop, window, input handlers, score, current level, and file manager:
+
+\begin{lstlisting}
+public class Game implements Runnable {
+    private GameWindow wnd;
+    private final KeyManager key;
+    private final Mouse mouse;
+    private State menuState;
+    private int level;
+    private final GameFileManager gameFileManager;
+
+    public Game(String title, int width, int intHeight,
+                GameFileManager gameFileManager) {
+        key = new KeyManager();
+        mouse = new Mouse();
+        this.gameFileManager = gameFileManager;
+
+        int[] loadedData = gameFileManager.loadGame();
+        this.level = loadedData[0];
+        this.score = loadedData[2];
+    }
+}
+\end{lstlisting}
+
+The design separates responsibilities: \texttt{Game} controls execution, \texttt{Map} manages the level layout, \texttt{EntityManager} manages active objects, \texttt{State} represents screens, and \texttt{Tile} represents map elements.
+
+\section{Inheritance}
+
+Inheritance allows a class to reuse fields and behavior from a parent class. In this project, the entity hierarchy starts from the abstract class \texttt{Entity}. Moving game objects inherit from \texttt{Creature}, and concrete objects such as \texttt{Player} and ghosts inherit from \texttt{Creature}.
+
+\begin{lstlisting}
+public abstract class Entity {
+    public abstract void Update() throws InvalidFileException;
+    public abstract void Draw(Graphics g);
+    public abstract void die();
+}
+
+public abstract class Creature extends Entity {
+    public Creature(Handler handler, double x, double y) {
+        this(handler, x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    }
+}
+
+public class Player extends Creature implements Damageable {
+    public Player(Handler handler, float x, float y) {
+        super(handler, x, y);
+    }
+}
+\end{lstlisting}
+
+The player class receives movement, position, collision, and size behavior from the creature and entity base classes. This avoids duplicating common entity behavior in every moving object.
+
+\section{Encapsulation}
+
+Encapsulation means keeping data inside an object and accessing it through controlled methods. The \texttt{Entity} class keeps position, size, direction, and state private, then exposes getters and setters.
+
+\begin{lstlisting}
+public abstract class Entity {
+    private double x, y;
+    private String direction = "right";
+    private final Handler handler;
+    private int width, height;
+    private boolean active = true;
+
+    public double getX() {
+        return x;
+    }
+
+    public void setx(double x) {
+        this.x = x;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+}
+\end{lstlisting}
+
+Other classes cannot directly change \texttt{x}, \texttt{y}, or \texttt{active}. They must use methods such as \texttt{setx()}, \texttt{sety()}, or \texttt{setActive()}, which keeps object state organized and easier to maintain.
+
+\section{Information Hiding}
+
+Information hiding means hiding internal implementation details that other classes do not need to know. In \texttt{Creature}, movement is exposed through the public method \texttt{move()}, while the details of horizontal and vertical movement are hidden in private methods.
+
+\begin{lstlisting}
+public abstract class Creature extends Entity {
+    public void move() {
+        moveX();
+        moveY();
+    }
+
+    private void moveX() {
+        if (xMove > 0) {
+            int tx = (int) (getX() + xMove + getSolidArea().x
+                    + getSolidArea().width) / Tile.getTileWidth();
+            if (collision(tx, (int) getY() / Tile.getTileHeight())) {
+                setx(getX() + xMove);
+            }
+        }
+    }
+
+    private void moveY() {
+        if (yMove > 0) {
+            int ty = (int) (getY() + yMove + getSolidArea().height)
+                    / Tile.getTileHeight();
+            if (collision((int) getX() / Tile.getTileWidth(), ty)) {
+                sety(getY() + yMove);
+            }
+        }
+    }
+}
+\end{lstlisting}
+
+Users of \texttt{Creature} only call \texttt{move()}. They do not need to know how collision checks and tile coordinate calculations are performed.
+
+\section{Abstraction}
+
+Abstraction defines what an object must do without forcing every subclass to do it the same way. The \texttt{Entity} and \texttt{State} classes are abstract because they define common behavior for game objects and screens.
+
+\begin{lstlisting}
+public abstract class State {
+    private static State currentState = null;
+    private final Handler handler;
+
+    public static void setState(State state) {
+        State.currentState = state;
+    }
+
+    public abstract void Update() throws InvalidFileException;
+    public abstract void Draw(Graphics g);
+}
+\end{lstlisting}
+
+Every state must implement \texttt{Update()} and \texttt{Draw()}, but each state decides its own behavior. For example, \texttt{MenuState}, \texttt{GameState}, \texttt{SoundState}, and \texttt{LeaderboardState} all share the same abstract interface while implementing different screens.
+
+\section{Polymorphism}
+
+Polymorphism allows one interface or parent type to refer to many concrete object types. The project uses several forms of polymorphism.
+
+\subsection{Polymorphism by Inclusion}
+
+Inclusion polymorphism happens when a parent reference points to a child object. The \texttt{EntityManager} stores all objects as \texttt{Entity}, even though they may be \texttt{Player}, \texttt{Dot}, \texttt{RedGhost}, \texttt{BlueGhost}, and other subclasses.
+
+\begin{lstlisting}
+public class EntityManager {
+    private ArrayList<Entity> entities;
+
+    public void Update() throws InvalidFileException {
+        Iterator<Entity> it = entities.iterator();
+        while (it.hasNext()) {
+            Entity e = it.next();
+            e.Update();
+            if (!e.isActive()) {
+                it.remove();
+            }
+        }
+    }
+
+    public void Draw(Graphics g) {
+        for (Entity e : entities) {
+            e.Draw(g);
+        }
+    }
+}
+\end{lstlisting}
+
+The loop does not need to know the exact class of each object. Java selects the correct overridden method at runtime.
+
+\subsection{Method Overloading}
+
+Method overloading occurs when methods or constructors have the same name but different parameter lists. The project uses overloaded constructors in \texttt{Creature}.
+
+\begin{lstlisting}
+public abstract class Creature extends Entity {
+    public Creature(Handler handler, double x, double y,
+                    int width, int height) {
+        super(handler, x, y, width, height);
+    }
+
+    public Creature(Handler handler, double x, double y) {
+        this(handler, x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    }
+}
+\end{lstlisting}
+
+The second constructor allows a creature to be created with default width and height, while the first constructor allows custom dimensions.
+
+The project also overloads image loading:
+
+\begin{lstlisting}
+public static BufferedImage LoadImage(String path)
+        throws ImageNotFoundException {
+    return ImageIO.read(ImageLoader.class.getResource(path));
+}
+
+public static BufferedImage LoadImage(String path, int width, int height)
+        throws ImageNotFoundException {
+    BufferedImage originalImage = LoadImage(path);
+    BufferedImage resizedImage =
+        new BufferedImage(width, height, originalImage.getType());
+    return resizedImage;
+}
+\end{lstlisting}
+
+\subsection{Parametric Polymorphism}
+
+Parametric polymorphism is implemented using generics. The \texttt{Grid<T>} class can store objects of any type.
+
+\begin{lstlisting}
+public class Grid<T> {
+    private final List<List<T>> grid;
+
+    public void setCell(int row, int col, T item) {
+        if (isValid(row, col)) {
+            grid.get(row).set(col, item);
+        }
+    }
+
+    public T getCell(int row, int col) {
+        if (isValid(row, col)) {
+            return grid.get(row).get(col);
+        }
+        return null;
+    }
+}
+\end{lstlisting}
+
+In the map, this generic class is used specifically as a tile grid:
+
+\begin{lstlisting}
+private Grid<Tile> gameTiles;
+gameTiles = new Grid<>(height, width);
+\end{lstlisting}
+
+\subsection{Polymorphism by Coercion and Type Casting}
+
+Coercion happens when Java converts one type into another compatible type. The project uses numeric casting when drawing objects, because entity positions are stored as \texttt{double} but drawing coordinates require integers.
+
+\begin{lstlisting}
+public void Draw(Graphics g) {
+    BufferedImage image = directionImages.get(getDirection());
+    g.drawImage(image, (int) getX(), (int) getY(), null);
+}
+\end{lstlisting}
+
+The project also uses upcasting, where a subclass object is stored in a parent reference:
+
+\begin{lstlisting}
+State gameState = new GameState(handler, this.level);
+State.setState(gameState);
+\end{lstlisting}
+
+Here, a \texttt{GameState} object is treated as a general \texttt{State}. This is safe because \texttt{GameState} is a subtype of \texttt{State}.
+
+\section{Interface Implementation}
+
+An interface defines behavior that a class promises to provide. The project defines a \texttt{Damageable} interface.
+
+\begin{lstlisting}
+public interface Damageable {
+    void takeDamage(int amount);
+}
+
+public class Player extends Creature implements Damageable {
+    @Override
+    public void takeDamage(int amount) {
+        System.out.println("Player taking " + amount + " damage!");
+        die();
+    }
+}
+\end{lstlisting}
+
+The \texttt{Player} class promises to implement \texttt{takeDamage()}. This makes it possible to handle damage through the interface type.
+
+The project also implements Java built-in input interfaces:
+
+\begin{lstlisting}
+public class KeyManager implements KeyListener {
+    @Override
+    public void keyPressed(KeyEvent e) {
+        keys[e.getKeyCode()] = true;
+    }
+}
+
+public class Mouse implements MouseListener, MouseMotionListener {
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        x = e.getX();
+        y = e.getY();
+    }
+}
+\end{lstlisting}
+
+\section{Composition}
+
+Composition means building complex objects by combining other objects. In this project, \texttt{Game} is composed of a window, keyboard manager, mouse manager, state objects, and file manager.
+
+\begin{lstlisting}
+public class Game implements Runnable {
+    private GameWindow wnd;
+    private final KeyManager key;
+    private final Mouse mouse;
+    private State menuState;
+    private final GameFileManager gameFileManager;
+
+    public Game(String title, int width, int intHeight,
+                GameFileManager gameFileManager) {
+        key = new KeyManager();
+        mouse = new Mouse();
+        this.gameFileManager = gameFileManager;
+    }
+}
+\end{lstlisting}
+
+The \texttt{Map} class is also composed of a tile grid and an entity manager:
+
+\begin{lstlisting}
+public class Map {
+    private Grid<Tile> gameTiles;
+    private final EntityManager entityManager;
+
+    public Map(Handler handler, String path)
+            throws InvalidFileException {
+        entityManager =
+            new EntityManager(handler, new Player(handler, 100, 100));
+        loadMap(path);
+    }
+}
+\end{lstlisting}
+
+This design keeps each object focused on a clear responsibility.
+
+\section{Subtyping}
+
+Subtyping means that an object of a child class can be used where its parent type or implemented interface is expected. The developer-side evidence is in the class declarations.
+
+\begin{lstlisting}
+public class Player extends Creature implements Damageable {
+    // Player is a Creature and is also Damageable.
+}
+
+public class RedGhost extends Creature {
+    // RedGhost is a Creature.
+}
+
+public class MenuState extends State {
+    // MenuState is a State.
+}
+
+public class Block extends Tile {
+    // Block is a Tile.
+}
+\end{lstlisting}
+
+These declarations define the subtype relationships. Because \texttt{Player}, \texttt{RedGhost}, \texttt{MenuState}, and \texttt{Block} are subtypes, the rest of the project can use them through general parent types such as \texttt{Entity}, \texttt{Creature}, \texttt{State}, or \texttt{Tile}.
+
+\section{Exception Handling}
+
+Exception handling is used to detect and manage errors such as missing files, invalid map data, and missing images. The project defines custom exception classes.
+
+\begin{lstlisting}
+public class InvalidFileException extends Exception {
+    InvalidFileException(String message) {
+        super(message);
+    }
+}
+
+public class ImageNotFoundException extends Exception {
+    ImageNotFoundException(String message) {
+        super(message);
+    }
+}
+\end{lstlisting}
+
+The \texttt{ReadMap} class throws a custom exception if the map file cannot be read:
+
+\begin{lstlisting}
+public static String loadFile(String path)
+        throws InvalidFileException {
+    StringBuilder builder = new StringBuilder();
+    try {
+        BufferedReader b = new BufferedReader(new FileReader(path));
+        String line;
+        while ((line = b.readLine()) != null) {
+            builder.append(line).append("\n");
+        }
+        b.close();
+    } catch (Exception e) {
+        throw new InvalidFileException("The file was not found!");
+    }
+    return builder.toString();
+}
+\end{lstlisting}
+
+The \texttt{GameFileManager} class also catches file errors and provides default values, so the game can start even if no save file exists.
+
+\begin{lstlisting}
+public int[] loadGame() {
+    int[] data = new int[3];
+    try (BufferedReader reader =
+             new BufferedReader(new FileReader(FILE_NAME))) {
+        data[0] = Integer.parseInt(reader.readLine());
+        data[1] = Integer.parseInt(reader.readLine());
+        data[2] = Integer.parseInt(reader.readLine());
+    } catch (IOException | NumberFormatException
+             | NullPointerException e) {
+        data[0] = 1;
+        data[1] = 5;
+        data[2] = 0;
+    }
+    return data;
+}
+\end{lstlisting}
+
+\section{Customization}
+
+In this report, customization means the parts of the program that are not completely fixed in the code and can change based on user choice or saved user data. The current project does not implement choosing a different player character. The player controls one Pac-Man player object. However, the project does provide customization through level selection, sound choice, save/load, and leaderboard persistence.
+
+\subsection{Choosing the Level}
+
+The player can choose which level to start from in the level/about screen. The selected option changes the active \texttt{GameState}.
+
+\begin{lstlisting}
+if (getHandler().getMouse().pressed_left()
+        && level1.contains(getHandler().getMouse().getX(),
+                           getHandler().getMouse().getY())) {
+    State.setState(new GameState(getHandler(), 1));
+}
+
+if (getHandler().getMouse().pressed_left()
+        && level4.contains(getHandler().getMouse().getX(),
+                           getHandler().getMouse().getY())) {
+    State.setState(new GameState(getHandler(), 4));
+}
+\end{lstlisting}
+
+This means the level is selected by the player instead of being only one fixed value.
+
+\subsection{Save and Load}
+
+Save and load are also customization-related because the game adapts to the player's previous progress. The saved level, lives, and score are loaded when the user chooses to continue.
+
+\begin{lstlisting}
+if (getHandler().getMouse().pressed_left()
+        && load.contains(getHandler().getMouse().getX(),
+                         getHandler().getMouse().getY())) {
+    int[] savedData = getHandler().getGameFileManager().loadGame();
+    getHandler().getGame().setLevel(savedData[0]);
+    getHandler().getGame().setScoreValue(savedData[2]);
+    State.setState(new GameState(getHandler(), savedData[0]));
+}
+\end{lstlisting}
+
+The save file stores progress:
+
+\begin{lstlisting}
+public void saveGame(int level, int lives, int score) {
+    try (BufferedWriter writer =
+             new BufferedWriter(new FileWriter(FILE_NAME))) {
+        writer.write(level + "\n");
+        writer.write(lives + "\n");
+        writer.write(score + "\n");
+    } catch (IOException e) {
+        System.err.println("Error saving game state: "
+                           + e.getMessage());
+    }
+}
+\end{lstlisting}
+
+\subsection{Sound Choice}
+
+The user can open the sound state and choose whether sound should be active.
+
+\begin{lstlisting}
+if (getHandler().getMouse().pressed_left()
+        && sound.contains(getHandler().getMouse().getX(),
+                          getHandler().getMouse().getY())) {
+    State.setState(new SoundState(getHandler()));
+}
+\end{lstlisting}
+
+The sound class stores the sound status:
+
+\begin{lstlisting}
+public class Sound {
+    private int Sound_off = 0;
+
+    public boolean isActive() {
+        return Sound_off == 0;
+    }
+
+    public void setSoundOff(int sound_off) {
+        Sound_off = sound_off;
+    }
+}
+\end{lstlisting}
+
+\subsection{Leaderboard}
+
+The leaderboard stores user scores and keeps the highest scores. This is another form of user-specific customization because the displayed leaderboard depends on previous game results.
+
+\begin{lstlisting}
+public void saveLeaderboardScore(int score) {
+    List<Integer> scores = loadLeaderboardScores();
+    scores.add(score);
+    Collections.sort(scores, Collections.reverseOrder());
+
+    try (BufferedWriter writer =
+             new BufferedWriter(new FileWriter(LEADERBOARD_FILE_NAME))) {
+        int limit = Math.min(MAX_LEADERBOARD_SCORES, scores.size());
+        for (int i = 0; i < limit; i++) {
+            writer.write(String.valueOf(scores.get(i)));
+            writer.newLine();
+        }
+    } catch (IOException e) {
+        System.err.println("Error saving leaderboard: "
+                           + e.getMessage());
+    }
+}
+\end{lstlisting}
+
+\section{Open/Closed Principle}
+
+The Open/Closed Principle says that software should be open for extension but closed for modification. In this project, many parts can be extended by adding new subclasses instead of rewriting the main loops.
+
+For example, a new tile type can extend \texttt{Tile} and override \texttt{IsSolid()}:
+
+\begin{lstlisting}
+public class Block extends Tile {
+    public Block(int idd) {
+        super(Assets.getBlock(), idd);
+    }
+
+    @Override
+    public boolean IsSolid() {
+        return true;
+    }
+}
+\end{lstlisting}
+
+The rest of the map can still draw and check tiles through the \texttt{Tile} type:
+
+\begin{lstlisting}
+public Tile getTile(int x, int y) {
+    if (gameTiles != null) {
+        return gameTiles.getCell(y, x);
+    }
+    return Tile.getBlock();
+}
+\end{lstlisting}
+
+The same idea applies to entities and states. A new enemy can extend \texttt{Creature}, and a new screen can extend \texttt{State}. The main update and draw loops can continue using parent references:
+
+\begin{lstlisting}
+for (Entity e : entities) {
+    e.Draw(g);
+}
+
+if (State.getState() != null) {
+    State.getState().Update();
+}
+\end{lstlisting}
+
+This shows that the project is designed so new behavior can be added through extension.
+
+\section{Conclusion}
+
+The Pac-Man project demonstrates the main principles of Object-Oriented Programming in Java. Inheritance and abstraction organize shared behavior, encapsulation and information hiding protect internal data, polymorphism allows the game loop to work with many object types, interfaces define required behavior, and composition builds the game from focused components. The project also uses custom exceptions, user customization through level selection and save/load features, and an extensible design that supports the Open/Closed Principle.
+
+\end{document}
