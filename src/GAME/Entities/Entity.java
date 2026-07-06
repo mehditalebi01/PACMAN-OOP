@@ -8,7 +8,7 @@ import java.awt.*;
 public abstract class Entity {
 
     private double x,y;
-    private static String direction="right";
+    private String direction="right";
     private final Handler handler;
     private int width, height;
     private final Rectangle solidArea;
@@ -81,6 +81,6 @@ public abstract class Entity {
     }
 
     public void setDirection(String direction) {
-        Entity.direction = direction;
+        this.direction = direction;
     }
 }

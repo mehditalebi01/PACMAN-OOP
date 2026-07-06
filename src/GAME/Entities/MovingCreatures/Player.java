@@ -43,27 +43,6 @@ public final class Player extends Creature implements Damageable{
     public void Draw(Graphics g) {
         BufferedImage image = directionImages.get(getDirection());
         g.drawImage(image, (int) getX(), (int) getY() , null);
-
-        g.setFont(new Font("Sergiue", Font.BOLD, 22));
-        g.drawString("Score : " + getHandler().getGame().getScore() , 700 , 40 );
-        g.drawString("Level : " + getHandler().getGame().getLevel() , 400 , 40 );
-        g.drawString("Start Menu" , 530 , 40 );
-        g.drawImage(Assets.getSound_icon(), 300 , 10,null );
-        Rectangle sound = new Rectangle(300,10, 48, 39);
-        Rectangle menu = new Rectangle(500,30, 150, 40);
-        if(getHandler().getMouse().pressed_left() && menu.contains(getHandler().getMouse().getX(), getHandler().getMouse().getY())){
-            State.setState(getHandler().getGame().getMenuState());
-            Sound.getChompSound().stop();
-            getHandler().getGameFileManager().saveGame(getHandler().getGame().getLevel(),
-                lives, getHandler().getGame().getScore()
-            );
-        }
-        if(getHandler().getMouse().pressed_left() && sound.contains(getHandler().getMouse().getX(), getHandler().getMouse().getY())){
-           Sound.getChompSound().stop();
-        }
-        for (int i = 0; i < lives; i++) {
-            g.drawImage(Assets.getLife(), i*48, 0, null);
-        }
     }
 
     public void die() {
@@ -224,6 +203,10 @@ public final class Player extends Creature implements Damageable{
 
     public boolean isDead() {
         return dead;
+    }
+
+    public int getLives() {
+        return lives;
     }
 
     private void saveScoreToLeaderboard() {

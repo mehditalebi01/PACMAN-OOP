@@ -1,9 +1,8 @@
 package GAME;
 
+import GAME.Entities.EntityManager;
 import GAME.Entities.MovingCreatures.Player;
-import GAME.Entities.EntityManager; 
 import GAME.Tiles.Tile;
-
 import java.awt.*;
 
 public final class Map {
@@ -15,13 +14,11 @@ public final class Map {
     private final EntityManager entityManager;
 
     public Map(Handler handler, String path) throws InvalidFileException {
-
-        entityManager = new EntityManager(handler, new Player(handler, 100, 100));
-
         loadMap(path);
 
-        entityManager.getPlayer().setx(initialPlayerX);
-        entityManager.getPlayer().sety(initialPlayerY);
+        handler.setMap( this);
+        Player player = new Player(handler, initialPlayerX, initialPlayerY);
+        entityManager = new EntityManager(handler, player);
     }
 
     private void loadMap(String path) throws InvalidFileException {
@@ -64,6 +61,14 @@ public final class Map {
             return gameTiles.getCell(y, x);
         }
         return Tile.getBlock();
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     public void Draw(Graphics g) {
