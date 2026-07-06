@@ -3,7 +3,7 @@ package GAME;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Grid<T> {
+public final class Grid<T> {
     private final List<List<T>> grid;
     private final int rows;
     private final int cols;

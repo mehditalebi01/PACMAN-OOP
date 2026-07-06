@@ -3,7 +3,7 @@ package GAME.Graphics;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Assets {
+public final class Assets {
     private static final int width=48, height=48;
 
     private static BufferedImage about,rectangle,up,down,left,right,right_down_corner2,left_up_corner2,left_down_corner2,right_up_corner2,background,square_up,square_left,square_right,square_down,

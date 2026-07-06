@@ -6,22 +6,13 @@ import GAME.Tiles.Tile;
 
 import java.awt.*;
 
-public class PinkGhost extends Creature {
+public final class PinkGhost extends Creature {
 
     private int speed;
 
     public PinkGhost(Handler handler, double x, double y) {
         super(handler, x, y);
-        if(handler.getGame().getLevel()==1)
-            speed=2;
-        else
-        if(handler.getGame().getLevel()==2)
-            speed=2;
-        else
-        if(handler.getGame().getLevel()==3)
-            speed=3;
-        else
-            speed=4;
+        this.speed = speedCalculator();
 
     }
 
@@ -53,8 +44,4 @@ public class PinkGhost extends Creature {
         g.drawImage(Assets.getPinkGhost(),(int) getX() , (int) getY() , getWidth() , getHeight() , null);
     }
 
-    @Override
-    public void die() {
-
-    }
 }

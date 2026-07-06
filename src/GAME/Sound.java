@@ -3,7 +3,7 @@ package GAME;
 import javax.sound.sampled.*;
 import java.util.Objects;
 
-public class Sound {
+public final class Sound {
 
     private int Sound_off = 0;
     private Clip clip;

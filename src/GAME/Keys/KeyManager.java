@@ -3,7 +3,7 @@ package GAME.Keys;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class KeyManager implements KeyListener {
+public final class KeyManager implements KeyListener {
     private final boolean[] keys;
     private boolean up,down,left,right; 
     public KeyManager()

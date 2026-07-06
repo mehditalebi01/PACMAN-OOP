@@ -2,7 +2,7 @@ package GAME.Graphics;
 
 import java.awt.image.BufferedImage;
 
-public class SpriteSheet {
+public final class SpriteSheet {
     private final BufferedImage spriteSheet;
     public SpriteSheet(BufferedImage buffImg)
     {

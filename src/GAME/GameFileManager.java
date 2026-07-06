@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class GameFileManager {
+public final class GameFileManager {
     private static final String FILE_NAME = "gamestate.txt";
     private static final String LEADERBOARD_FILE_NAME = "leaderboard.txt";
     private static final int MAX_LEADERBOARD_SCORES = 5;

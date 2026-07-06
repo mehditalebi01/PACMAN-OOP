@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.awt.Graphics2D; 
 
-public class ImageLoader {
+public final class ImageLoader {
     public static BufferedImage LoadImage(String path) throws ImageNotFoundException {
         try {
             BufferedImage image = ImageIO.read(Objects.requireNonNull(ImageLoader.class.getResource(path), "Resource not found at path: " + path));

@@ -3,7 +3,7 @@ package GAME;
 import GAME.Keys.KeyManager;
 import GAME.Keys.Mouse;
 
-public class Handler {
+public final class Handler {
     private Game game;
     private Map map;
     private final GameFileManager gameFileManager;

@@ -3,7 +3,7 @@ package GAME;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
-public class ReadMap {
+public final class ReadMap {
 
     public static String loadFile(String path) throws InvalidFileException { 
         StringBuilder builder = new StringBuilder(); 

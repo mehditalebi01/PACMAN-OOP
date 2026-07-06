@@ -6,7 +6,7 @@ import GAME.Tiles.Tile;
 
 import java.awt.*;
 
-public class Map {
+public final class Map {
     private int width, height;
     private int initialPlayerX, initialPlayerY;
 

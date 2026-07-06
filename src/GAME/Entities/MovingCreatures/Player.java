@@ -14,11 +14,11 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
-public class Player extends Creature implements Damageable{
+public final class Player extends Creature implements Damageable{
 
     private static final Map<String, BufferedImage> directionImages;
     private int lives ;
-    private int k=37;
+    private int k;
     private boolean winner = false;
     private boolean dead = false;
     private boolean leaderboardSaved = false;
@@ -66,7 +66,6 @@ public class Player extends Creature implements Damageable{
         }
     }
 
-    @Override
     public void die() {
         lives--;
         getHandler().getGameFileManager().saveGame(

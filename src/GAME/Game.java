@@ -11,7 +11,7 @@ import java.awt.*;
 import java.awt.image.BufferStrategy;
 
 
-public class Game implements Runnable{
+public final class Game implements Runnable{
 
     private GameWindow wnd;
     private final int width;
@@ -147,7 +147,7 @@ public class Game implements Runnable{
         return menuState;
     }
 
-    public synchronized void StartGame()
+    public  void StartGame()
     {
         if(!runState)
         {

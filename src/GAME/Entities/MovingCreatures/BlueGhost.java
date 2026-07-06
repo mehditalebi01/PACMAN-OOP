@@ -6,22 +6,15 @@ import GAME.Tiles.Tile;
 
 import java.awt.*;
 
-public class BlueGhost extends Creature {
+public final class BlueGhost extends Creature {
 
     private int speed;
+
     public BlueGhost(Handler handler, double x, double y) {
         super(handler, x, y);
-        if(handler.getGame().getLevel()==1)
-            speed=2;
-        else
-        if(handler.getGame().getLevel()==2)
-            speed=2;
-        else
-        if(handler.getGame().getLevel()==3)
-            speed=3;
-        else
-            speed=4;
+        this.speed = speedCalculator();
     }
+
 
     @Override
     public void Update() {
@@ -49,15 +42,11 @@ public class BlueGhost extends Creature {
         }
     }
 
-
-
     @Override
     public void Draw(Graphics g) {
         g.drawImage(Assets.getBlueGhost(),(int) getX() , (int) getY() , getWidth() , getHeight() , null);
     }
 
-    @Override
-    public void die() {
 
-    }
+
 }

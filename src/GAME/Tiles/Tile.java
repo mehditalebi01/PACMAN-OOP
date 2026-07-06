@@ -63,31 +63,7 @@ public class Tile {
         return false;
     }
 
-    public static Tile getGateUpTile() { return gateUpTile; }
-    public static Tile getGateDownTile() { return gateDownTile; }
-    public static Tile getGateLeftTile() { return gateLeftTile; }
-    public static Tile getGateRightTile() { return gateRightTile; }
-    public static Tile getLeft_down_cornerTile() { return left_down_cornerTile; }
-    public static Tile getLeft_up_cornerTile() { return left_up_cornerTile; }
-    public static Tile getRight_down_cornerTile() { return right_down_cornerTile; }
-    public static Tile getRight_up_cornerTile() { return right_up_cornerTile; }
-    public static Tile getHalfLeftTile() { return halfLeftTile; }
-    public static Tile getHalfRightTile() { return halfRightTile; }
-    public static Tile getDot() { return dot; }
-    public static Tile getSquareUpTile() { return squareUpTile; }
-    public static Tile getSquareLeftTile() { return squareLeftTile; }
-    public static Tile getSquareRightTile() { return squareRightTile; }
-    public static Tile getSquareDownTile() { return squareDownTile; }
-    public static Tile getBackgroundTile() { return backgroundTile; }
-    public static Tile getPowerDot() { return PowerDot; }
-    public static Tile getRight_up_corner2() { return right_up_corner2; }
-    public static Tile getRight_down_corner2() { return right_down_corner2; }
-    public static Tile getLeft_down_corner2() { return left_down_corner2; }
-    public static Tile getLeft_up_corner2() { return left_up_corner2; }
-    public static Tile getUp() { return up; }
-    public static Tile getDown() { return down; }
-    public static Tile getLeft() { return left; }
-    public static Tile getRight() { return right; }
+
     public static Tile getBlock() { return block; }
 
     public int getId() {

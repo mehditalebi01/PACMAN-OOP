@@ -6,7 +6,7 @@ import GAME.Sound;
 
 import java.awt.*;
 
-public class SoundState extends State{
+public final class SoundState extends State{
     public SoundState(Handler handler) {
         super(handler);
     }

@@ -6,7 +6,7 @@ import GAME.Levels;
 
 import java.awt.*;
 
-public class GameState extends State{
+public final class GameState extends State{
     private final Levels hart;
     public GameState(Handler handler,int level) throws InvalidFileException {
         super(handler);

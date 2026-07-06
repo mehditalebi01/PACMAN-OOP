@@ -8,13 +8,14 @@ import java.awt.*;
 public abstract class Entity {
 
     private double x,y;
-    private String direction="right";
+    private static String direction="right";
     private final Handler handler;
     private int width, height;
     private final Rectangle solidArea;
     private boolean active=true;
 
     public Entity(Handler handler,double x, double y, int width, int height) {
+
         this.handler=handler;
         this.x=x;
         this.y=y;
@@ -61,7 +62,7 @@ public abstract class Entity {
     public void setActive(boolean active) {
         this.active = active;
     }
-    public abstract void die();
+
 
     public Rectangle getCollisionBounds(float xOffset , float yOffset){
         return new Rectangle( (int)( x + solidArea.x + xOffset ) , (int) ( y + solidArea.y + yOffset) ,solidArea.width , solidArea.height);
@@ -80,6 +81,6 @@ public abstract class Entity {
     }
 
     public void setDirection(String direction) {
-        this.direction = direction;
+        Entity.direction = direction;
     }
 }

@@ -7,7 +7,7 @@ import GAME.Handler;
 import GAME.InvalidFileException;
 import GAME.Sound;
 
-public class MenuState extends State {
+public final class MenuState extends State {
 
     public MenuState(Handler handler)
     {

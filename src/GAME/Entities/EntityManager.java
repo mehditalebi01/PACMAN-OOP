@@ -9,7 +9,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class EntityManager {
+public final class EntityManager {
     private Handler handler;
     private Player player;
     private ArrayList<Entity> entities;

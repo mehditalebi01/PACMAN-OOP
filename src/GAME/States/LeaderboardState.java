@@ -10,7 +10,7 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.List;
 
-public class LeaderboardState extends State {
+public final class LeaderboardState extends State {
 
     private final Rectangle backButton;
 

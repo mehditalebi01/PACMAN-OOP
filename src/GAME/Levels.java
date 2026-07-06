@@ -3,7 +3,7 @@ package GAME;
 import java.awt.*;
 
 
-public class Levels {
+public final class Levels {
     private Map map;
     public Levels(Handler handler , String directory , int level) throws InvalidFileException {
 
