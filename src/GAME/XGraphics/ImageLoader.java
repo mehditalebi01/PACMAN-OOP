@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.awt.Graphics2D; 
 
 public final class ImageLoader {
+    // Overloading
     public static BufferedImage LoadImage(String path) throws ImageNotFoundException {
         try {
             BufferedImage image = ImageIO.read(Objects.requireNonNull(ImageLoader.class.getResource(path), "Resource not found at path: " + path));
@@ -25,6 +26,7 @@ public final class ImageLoader {
     }
 
 
+    // Overloading
     public static BufferedImage LoadImage(String path, int width, int height) throws ImageNotFoundException {
         BufferedImage originalImage = LoadImage(path); 
         if (originalImage != null) {
