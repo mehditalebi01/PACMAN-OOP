@@ -1,8 +1,7 @@
 package GAME.Entities.Statics;
 
-import GAME.Graphics.Assets;
+import GAME.XGraphics.Assets;
 import GAME.Handler;
-import GAME.InvalidFileException;
 import GAME.Tiles.Tile;
 
 import java.awt.*;

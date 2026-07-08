@@ -1,6 +1,6 @@
 package GAME.Tiles;
 
-import GAME.Graphics.Assets;
+import GAME.XGraphics.Assets;
 
 public class backgroundTile extends Tile {
 
@@ -10,4 +10,3 @@ public class backgroundTile extends Tile {
     }
 
 }
-

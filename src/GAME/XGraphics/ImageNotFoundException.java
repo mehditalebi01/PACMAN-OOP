@@ -1,6 +1,6 @@
-package GAME.Graphics;
+package GAME.XGraphics;
 
-// Exceptions
+
 public class ImageNotFoundException extends Exception{
     ImageNotFoundException(String message)
     {

@@ -1,7 +1,7 @@
 package GAME;
 
-import GAME.Graphics.Assets;
-import GAME.Graphics.ImageNotFoundException;
+import GAME.XGraphics.Assets;
+import GAME.XGraphics.ImageNotFoundException;
 import GAME.Keys.KeyManager;
 import GAME.Keys.Mouse;
 import GAME.States.GameState;

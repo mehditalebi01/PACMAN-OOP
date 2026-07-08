@@ -3,7 +3,7 @@ package GAME.Entities.MovingCreatures;
 import GAME.Entities.Entity;
 import GAME.Handler;
 import GAME.Tiles.Tile;
-import GAME.InvalidFileException;
+
 
 public abstract class Creature extends Entity {
 
@@ -16,16 +16,13 @@ public abstract class Creature extends Entity {
     private double yMove; 
     private final Handler handler;
 
-    public Creature(Handler handler, double x, double y, int width, int height) {
-        super(handler, x, y, width, height);
+
+    public Creature(Handler handler, double x, double y) {
+        super(handler, x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT);
         this.speed = DEFAULT_SPEED; 
         this.xMove = 0;             
         this.yMove = 0;
         this.handler=handler;
-    }
-
-    public Creature(Handler handler, double x, double y) {
-    this(handler, x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT);
     }
 
     public void move() {
@@ -83,7 +80,6 @@ public abstract class Creature extends Entity {
 
         return speed;
     }
-
     public void setxMove(double xMove) {
         this.xMove = xMove;
     }
@@ -96,7 +92,5 @@ public abstract class Creature extends Entity {
         return speed;
     }
 
-    @Override
-    public void Update() throws InvalidFileException {
-    }
+
 }

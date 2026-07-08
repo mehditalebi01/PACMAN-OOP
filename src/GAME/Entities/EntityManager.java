@@ -26,7 +26,7 @@ public final class EntityManager {
     };
 
     private Handler handler;
-    private Player player;
+    private final Player player;
     private ArrayList<Entity> entities;
 
     public EntityManager(Handler handler, Player player) {
@@ -109,10 +109,6 @@ public final class EntityManager {
 
     public Player getPlayer() {
         return player;
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
     }
 
     public ArrayList<Entity> getEntities() {

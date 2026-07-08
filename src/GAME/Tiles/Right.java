@@ -1,6 +1,6 @@
 package GAME.Tiles;
 
-import GAME.Graphics.Assets;
+import GAME.XGraphics.Assets;
 
 public class Right extends Tile{
     public Right(int id)

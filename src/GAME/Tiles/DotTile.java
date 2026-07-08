@@ -1,7 +1,7 @@
 package GAME.Tiles;
 
 
-import GAME.Graphics.Assets;
+import GAME.XGraphics.Assets;
 
 public class DotTile extends Tile {
     public   DotTile(int idd) {

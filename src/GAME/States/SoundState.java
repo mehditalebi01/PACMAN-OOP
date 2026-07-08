@@ -1,6 +1,6 @@
 package GAME.States;
 
-import GAME.Graphics.Assets;
+import GAME.XGraphics.Assets;
 import GAME.Handler;
 import GAME.Sound;
 

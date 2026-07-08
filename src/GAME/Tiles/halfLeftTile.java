@@ -1,6 +1,6 @@
 package GAME.Tiles;
 
-import GAME.Graphics.Assets;
+import GAME.XGraphics.Assets;
 
 public class halfLeftTile extends Tile {
 
@@ -16,4 +16,3 @@ public class halfLeftTile extends Tile {
     }
 
 }
-

@@ -2,12 +2,12 @@ package GAME.States;
 
 import java.awt.*;
 
-import GAME.Graphics.Assets;
+import GAME.XGraphics.Assets;
 import GAME.Handler;
 import GAME.InvalidFileException;
 import GAME.Sound;
 
-public final class MenuState extends State {
+    public final class MenuState extends State {
 
     public MenuState(Handler handler)
     {

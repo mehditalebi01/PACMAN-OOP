@@ -9,7 +9,7 @@ public final class Map {
     private int width, height;
     private int initialPlayerX, initialPlayerY;
 
-    private Grid<Tile> gameTiles;
+    private  Grid<Tile> gameTiles;
 
     private final EntityManager entityManager;
 

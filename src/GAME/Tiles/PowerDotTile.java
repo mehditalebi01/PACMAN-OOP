@@ -1,7 +1,7 @@
 package GAME.Tiles;
 
 
-import GAME.Graphics.Assets;
+import GAME.XGraphics.Assets;
 
 public class PowerDotTile extends Tile {
 

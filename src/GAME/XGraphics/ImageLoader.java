@@ -1,4 +1,4 @@
-package GAME.Graphics;
+package GAME.XGraphics;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -7,7 +7,6 @@ import java.util.Objects;
 import java.awt.Graphics2D; 
 
 public final class ImageLoader {
-    // Overloading
     public static BufferedImage LoadImage(String path) throws ImageNotFoundException {
         try {
             BufferedImage image = ImageIO.read(Objects.requireNonNull(ImageLoader.class.getResource(path), "Resource not found at path: " + path));
@@ -26,17 +25,4 @@ public final class ImageLoader {
     }
 
 
-    // Overloading
-    public static BufferedImage LoadImage(String path, int width, int height) throws ImageNotFoundException {
-        BufferedImage originalImage = LoadImage(path); 
-        if (originalImage != null) {
-            System.out.println("Resizing image " + path + " to: " + width + "x" + height);
-            BufferedImage resizedImage = new BufferedImage(width, height, originalImage.getType());
-            Graphics2D g = resizedImage.createGraphics();
-            g.drawImage(originalImage, 0, 0, width, height, null);
-            g.dispose();
-            return resizedImage;
-        }
-        return null; 
-    }
 }

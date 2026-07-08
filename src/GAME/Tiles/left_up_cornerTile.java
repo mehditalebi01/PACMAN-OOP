@@ -1,6 +1,6 @@
 package GAME.Tiles;
 
-import GAME.Graphics.Assets;
+import GAME.XGraphics.Assets;
 
 public class left_up_cornerTile extends Tile {
 
@@ -16,4 +16,3 @@ public class left_up_cornerTile extends Tile {
     }
 
 }
-

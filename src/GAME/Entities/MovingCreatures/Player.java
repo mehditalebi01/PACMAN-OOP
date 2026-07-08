@@ -2,7 +2,7 @@ package GAME.Entities.MovingCreatures;
 
 import GAME.Entities.Entity;
 import GAME.Entities.Statics.Dot;
-import GAME.Graphics.Assets;
+import GAME.XGraphics.Assets;
 import GAME.Handler;
 import GAME.InvalidFileException;
 import GAME.Sound;
